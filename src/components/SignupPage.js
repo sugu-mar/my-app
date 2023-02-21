@@ -26,7 +26,7 @@ function Copyright(props) {
       {...props}
     >
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="">
         Callisto CRM
       </Link>{' '}
       {new Date().getFullYear()}
@@ -53,19 +53,31 @@ export default function SignUp() {
     initialValues: { firstName: '', lastName: '', username: '', password: '' },
 
     validationSchema: formValidationSchema,
-    onSubmit: (values) => {
-      console.log('onSubmit', values)
+    onSubmit: (newUser) => {
+      console.log('onSubmit', newUser)
+      createUser(newUser)
     },
   })
   const navigate = useNavigate()
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      username: data.get('username'),
-      password: data.get('password'),
-    })
+
+  const createUser = (newUser) => {
+    console.log('createUser', newUser)
+
+    fetch(`${SIGNUPAPI}`, {
+      method: 'POST',
+      body: JSON.stringify(newUser),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((data) => data.json())
   }
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault()
+  //   const data = new FormData(event.currentTarget)
+  //   console.log({
+  //     username: data.get('username'),
+  //     password: data.get('password'),
+  //   })
+  // }
 
   return (
     <ThemeProvider theme={theme}>

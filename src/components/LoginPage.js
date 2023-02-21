@@ -15,8 +15,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { LOGINAPI } from '../global'
 
 function Copyright(props) {
+  // const navigate = useNavigate()
   return (
     <Typography
       variant="body2"
@@ -28,6 +30,8 @@ function Copyright(props) {
       <Link color="inherit" href="">
         Callisto CRM
       </Link>{' '}
+      {/* <p> </p>
+      <Link color="inherit"> </Link> */}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -45,19 +49,30 @@ export default function Login() {
   const formik = useFormik({
     initialValues: { email: '', password: '' },
     validationSchema: formValidationSchema,
-    onSubmit: (values) => {
-      console.log('onSubmit', values)
+    onSubmit: (loginValue) => {
+      console.log('onSubmit', loginValue)
+      verifyUser(loginValue)
     },
   })
   const navigate = useNavigate()
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+
+  const verifyUser = (loginValue) => {
+    console.log('verifyUser', loginValue)
+    fetch(`${LOGINAPI}`, {
+      method: 'POST',
+      body: JSON.stringify(loginValue),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((data) => data.json())
   }
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault()
+  //   const data = new FormData(event.currentTarget)
+  //   console.log({
+  //     email: data.get('email'),
+  //     password: data.get('password'),
+  //   })
+  // }
 
   return (
     <ThemeProvider theme={theme}>
@@ -96,7 +111,6 @@ export default function Login() {
               onBlur={formik.handleBlur}
               value={formik.values.email}
               autoComplete="email"
-              autoFocus
             />
             <p>
               {' '}
