@@ -1,0 +1,1 @@
+export const SIGNUPAPI = "http://localhost:8000/user/signup"
